@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "687104636907",
+    "project_id": "bookt-fba34",
+    "storage_bucket": "bookt-fba34.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:687104636907:android:bfe593a4daa2cdee850bae",
+        "android_client_info": {
+          "package_name": "com.example.my_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJFUwDHy52_PlTX0ym6SDtF5hQOiyDIvk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

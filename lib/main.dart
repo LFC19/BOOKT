@@ -2,15 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
+import 'package:intl/date_symbol_data_local.dart'; // ✅ 추가
 
-import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
+import 'screens/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Firebase 초기화
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // ✅ 한국어 날짜/요일 포맷 초기화
+  await initializeDateFormatting('ko_KR', null);
+
   runApp(const MyApp());
 }
 
@@ -20,9 +27,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Book Tracker',
-      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo)),
-      debugShowCheckedModeBanner: false,
+      title: '독서 습관 트래커',
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+      ),
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
@@ -31,8 +40,8 @@ class MyApp extends StatelessWidget {
               body: Center(child: CircularProgressIndicator()),
             );
           }
-          if (snapshot.hasData && snapshot.data != null) {
-            return HomeScreen(userId: snapshot.data!.uid); // ✅ 구글 로그인한 사용자만
+          if (snapshot.hasData) {
+            return HomeScreen(userId: snapshot.data!.uid); // ✅ 로그인 사용자만 접근
           }
           return LoginScreen(); // ✅ 로그인 필요
         },

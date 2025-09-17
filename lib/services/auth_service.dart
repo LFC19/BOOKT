@@ -12,7 +12,7 @@ class AuthService {
   Future<User?> signInWithGoogle() async {
     try {
       final googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) return null; // 사용자가 취소
+      if (googleUser == null) return null;
 
       final googleAuth = await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
@@ -21,10 +21,8 @@ class AuthService {
       );
 
       final userCred = await _auth.signInWithCredential(credential);
-      return userCred.user; // ✅ User? 반환
+      return userCred.user;
     } catch (e) {
-      // 디버깅 로그
-      // ignore: avoid_print
       print('구글 로그인 에러: $e');
       return null;
     }

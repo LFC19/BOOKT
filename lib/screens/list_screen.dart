@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/reading_log.dart';
 import '../services/firestore_service.dart';
-import '../widgets/log_card.dart';
-import 'add_log_screen.dart';
+import '../models/reading_log.dart';
 
 class ListScreen extends StatelessWidget {
   final String userId;
@@ -10,48 +8,34 @@ class ListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fs = FirestoreService();
+    final _fs = FirestoreService();
 
     return StreamBuilder<List<ReadingLog>>(
-      stream: fs.logsByUserStream(userId),
-      builder: (context, snap) {
-        final logs = snap.data ?? [];
-        if (snap.connectionState == ConnectionState.waiting) {
+      stream: _fs.logsByUserStream(userId),
+      builder: (context, snapshot) {
+        // 1. 에러 처리
+        if (snapshot.hasError) {
+          return Center(child: Text("에러 발생: ${snapshot.error}"));
+        }
+
+        // 2. 로딩 처리
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
-        if (logs.isEmpty) {
-          return Center(
-            child: TextButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => AddLogScreen(userId: userId),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.add),
-              label: const Text('첫 기록을 추가해 보세요'),
-            ),
-          );
+
+        // 3. 데이터 확인
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text("저장된 기록이 없습니다."));
         }
+
+        final logs = snapshot.data!;
         return ListView.builder(
           itemCount: logs.length,
-          itemBuilder: (_, i) {
-            final log = logs[i];
-            return LogCard(
-              log: log,
-              onEdit: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => AddLogScreen(userId: userId, editing: log),
-                  ),
-                );
-              },
-              onDelete: () async {
-                await fs.deleteLog(log.id);
-              },
+          itemBuilder: (context, index) {
+            final log = logs[index];
+            return ListTile(
+              title: Text(log.bookTitle),
+              subtitle: Text("${log.pagesRead} 페이지 - ${log.date.toLocal()}"),
             );
           },
         );

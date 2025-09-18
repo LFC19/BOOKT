@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'firebase_options.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'firebase_options.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 
@@ -26,17 +26,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Book Tracker',
-      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo)),
-      debugShowCheckedModeBanner: false,
+      title: "독서 습관 트래커",
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Scaffold(body: Center(child: CircularProgressIndicator()));
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
           }
-          if (snapshot.hasData && snapshot.data != null) {
-            return HomeScreen(userId: snapshot.data!.uid);
+          if (snapshot.hasData) {
+            return HomeScreen(user: snapshot.data!); // ✅ 로그인 유저 전달
           }
           return LoginScreen();
         },

@@ -5,8 +5,8 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  User? get currentUser => _auth.currentUser;
   Stream<User?> get userStream => _auth.authStateChanges();
+  User? get currentUser => _auth.currentUser;
 
   /// Google 로그인
   Future<User?> signInWithGoogle() async {
@@ -23,7 +23,7 @@ class AuthService {
       final userCred = await _auth.signInWithCredential(credential);
       return userCred.user;
     } catch (e) {
-      print('구글 로그인 에러: $e');
+      print("Google 로그인 에러: $e");
       return null;
     }
   }
@@ -36,3 +36,4 @@ class AuthService {
     await _auth.signOut();
   }
 }
+

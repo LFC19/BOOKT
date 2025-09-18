@@ -2,24 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
-import 'package:intl/date_symbol_data_local.dart'; // ✅ 추가
-
-import 'screens/home_screen.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'screens/login_screen.dart';
+import 'screens/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Firebase 초기화
+  // ✅ 한국어 로케일 데이터 초기화
+  await initializeDateFormatting('ko_KR', null);
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // ✅ 한국어 날짜/요일 포맷 초기화
-  await initializeDateFormatting('ko_KR', null);
-
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -27,25 +26,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '독서 습관 트래커',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
-      ),
+      title: 'Book Tracker',
+      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo)),
+      debugShowCheckedModeBanner: false,
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
+            return const Scaffold(body: Center(child: CircularProgressIndicator()));
           }
-          if (snapshot.hasData) {
-            return HomeScreen(userId: snapshot.data!.uid); // ✅ 로그인 사용자만 접근
+          if (snapshot.hasData && snapshot.data != null) {
+            return HomeScreen(userId: snapshot.data!.uid);
           }
-          return LoginScreen(); // ✅ 로그인 필요
+          return LoginScreen();
         },
       ),
     );
   }
 }
+

@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../services/auth_service.dart';
 
 class LoginScreen extends StatelessWidget {
-  final _authService = AuthService();
+  final AuthService _authService = AuthService();
 
   LoginScreen({super.key});
 
@@ -19,7 +19,7 @@ class LoginScreen extends StatelessWidget {
             User? user = await _authService.signInWithGoogle();
             if (user == null && context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('로그인에 실패했습니다. 다시 시도해주세요.')),
+                const SnackBar(content: Text("로그인 실패, 다시 시도해주세요.")),
               );
             }
           },
@@ -28,3 +28,4 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
+

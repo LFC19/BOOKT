@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'add_log_screen.dart';
-import 'list_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../services/auth_service.dart';
 import 'chart_screen.dart';
+import 'add_log_screen.dart';
 import 'calendar_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,42 +14,92 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _index = 0;
+  final AuthService _authService = AuthService();
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    final pages = [
-      ListScreen(userId: widget.userId),
-      ChartScreen(userId: widget.userId),
-      CalendarScreen(userId: widget.userId),
+    final user = FirebaseAuth.instance.currentUser;
+
+    final screens = [
+      ChartScreen(userId: widget.userId),     // 📊 차트
+      AddLogScreen(userId: widget.userId),    // ✍ 기록 추가
+      CalendarScreen(userId: widget.userId),  // 📅 캘린더
     ];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('독서 습관 트래커')),
-      body: pages[_index],
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _index,
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.list_alt), label: '기록'),
-          NavigationDestination(icon: Icon(Icons.bar_chart), label: '차트'),
-          NavigationDestination(icon: Icon(Icons.calendar_month), label: '캘린더'),
+      appBar: AppBar(
+        title: const Text("독서 습관 트래커"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await _authService.signOut();
+            },
+          ),
         ],
-        onDestinationSelected: (i) => setState(() => _index = i),
       ),
-      floatingActionButton: (_index == 0)
-          ? FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => AddLogScreen(userId: widget.userId),
+      body: Column(
+        children: [
+          // ✅ 사용자 정보 헤더
+          if (user != null)
+            Container(
+              padding: const EdgeInsets.all(16),
+              color: Colors.grey.shade100,
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: user.photoURL != null
+                        ? NetworkImage(user.photoURL!)
+                        : null,
+                    radius: 30,
+                    child: user.photoURL == null
+                        ? const Icon(Icons.person, size: 30)
+                        : null,
+                  ),
+                  const SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        user.displayName ?? "이름 없음",
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      Text(user.email ?? "이메일 없음"),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          );
+
+          // ✅ 탭 컨텐츠
+          Expanded(child: screens[_selectedIndex]),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
         },
-        icon: const Icon(Icons.add),
-        label: const Text('기록 추가'),
-      )
-          : null,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart),
+            label: "차트",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: "기록",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: "캘린더",
+          ),
+        ],
+      ),
     );
   }
 }
+

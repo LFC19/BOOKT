@@ -19,13 +19,32 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final screens = [
       ChartScreen(userId: widget.user.uid),
-      ListScreen(userId: widget.user.uid),
+      const RecordListScreen(), // ✅ 여기 수정
       CalendarScreen(userId: widget.user.uid),
     ];
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("독서 습관 트래커"),
+        title: Row(
+          children: [
+            // 👤 프로필 사진 (작게)
+            CircleAvatar(
+              radius: 14,
+              backgroundImage: widget.user.photoURL != null
+                  ? NetworkImage(widget.user.photoURL!)
+                  : null,
+              child: widget.user.photoURL == null
+                  ? const Icon(Icons.person, size: 16)
+                  : null,
+            ),
+            const SizedBox(width: 8),
+            // ✨ 이름 or 이메일
+            Text(
+              widget.user.displayName ?? widget.user.email ?? "사용자",
+              style: const TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -35,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
+
       body: screens[_index],
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,

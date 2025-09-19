@@ -10,22 +10,54 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("로그인")),
       body: Center(
-        child: ElevatedButton.icon(
-          icon: const Icon(Icons.login),
-          label: const Text("Google로 로그인"),
-          onPressed: () async {
-            User? user = await _authService.signInWithGoogle();
-            if (user == null && context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("로그인 실패, 다시 시도해주세요.")),
-              );
-            }
-          },
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // 👋 환영 메시지
+              const Icon(Icons.menu_book, size: 80, color: Colors.blueAccent),
+              const SizedBox(height: 20),
+              const Text(
+                "독서 습관 트래커",
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                "책과 함께 성장하는 하루 📚",
+                style: TextStyle(fontSize: 16, color: Colors.black54),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 40),
+
+              // 🔵 구글 로그인 버튼
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  backgroundColor: Colors.white,
+                  elevation: 2,
+                ),
+                icon: const Icon(Icons.account_circle, color: Colors.black87), // ✅ 아이콘 사용
+                label: const Text(
+                  "Google 계정으로 로그인",
+                  style: TextStyle(
+                      fontSize: 16, color: Colors.black87, fontWeight: FontWeight.w600),
+                ),
+                onPressed: () async {
+                  final user = await _authService.signInWithGoogle();
+                  if (user != null && context.mounted) {
+                    Navigator.pushReplacementNamed(context, '/home');
+                  }
+                },
+              )
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
 

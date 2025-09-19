@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -16,13 +15,13 @@ class RecordListScreen extends StatefulWidget {
 class _RecordListScreenState extends State<RecordListScreen> {
   final _titleController = TextEditingController();
   final _pagesController = TextEditingController();
-  final _fs = FirestoreService();
   final _formKey = GlobalKey<FormState>();
+  final _fs = FirestoreService();
+
   DateTime _selectedDate = DateTime.now();
 
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
-
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
@@ -31,11 +30,7 @@ class _RecordListScreenState extends State<RecordListScreen> {
       userId: user.uid,
       bookTitle: _titleController.text.trim(),
       pagesRead: int.parse(_pagesController.text.trim()),
-      date: DateTime(
-        _selectedDate.year,
-        _selectedDate.month,
-        _selectedDate.day,
-      ),
+      date: _selectedDate,
     );
 
     await _fs.addLog(log);
@@ -53,9 +48,7 @@ class _RecordListScreenState extends State<RecordListScreen> {
       firstDate: DateTime(2020),
       lastDate: DateTime(2100),
     );
-    if (picked != null) {
-      setState(() => _selectedDate = picked);
-    }
+    if (picked != null) setState(() => _selectedDate = picked);
   }
 
   @override
@@ -65,93 +58,116 @@ class _RecordListScreenState extends State<RecordListScreen> {
       return const Center(child: Text("로그인이 필요합니다."));
     }
 
-    return Column(
-      children: [
-        // 입력폼
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _titleController,
-                  decoration: const InputDecoration(
-                    labelText: '책 제목',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (v) =>
-                  (v == null || v.isEmpty) ? '책 제목을 입력하세요' : null,
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _pagesController,
-                  decoration: const InputDecoration(
-                    labelText: '읽은 페이지 수',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                  validator: (v) {
-                    if (v == null || v.isEmpty) return '페이지 수 입력';
-                    final n = int.tryParse(v);
-                    if (n == null || n <= 0) return '1 이상의 정수 입력';
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Text(DateFormat('yyyy-MM-dd').format(_selectedDate)),
-                    const SizedBox(width: 8),
-                    ElevatedButton(
-                      onPressed: _pickDate,
-                      child: const Text('날짜 선택'),
+    return Scaffold(
+      body: Column(
+        children: [
+          // 입력 폼
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _titleController,
+                    decoration: const InputDecoration(
+                      labelText: "책 제목",
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.book_outlined),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                ElevatedButton(
-                  onPressed: _save,
-                  child: const Text("저장"),
-                ),
-              ],
+                    validator: (v) =>
+                    v == null || v.isEmpty ? "책 제목을 입력하세요" : null,
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: _pagesController,
+                    decoration: const InputDecoration(
+                      labelText: "읽은 페이지 수",
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.menu_book_outlined),
+                    ),
+                    keyboardType: TextInputType.number,
+                    validator: (v) {
+                      if (v == null || v.isEmpty) return "페이지 수 입력";
+                      final n = int.tryParse(v);
+                      if (n == null || n <= 0) return "1 이상의 정수 입력";
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          DateFormat("yyyy-MM-dd").format(_selectedDate),
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      TextButton.icon(
+                        onPressed: _pickDate,
+                        icon: const Icon(Icons.date_range),
+                        label: const Text("날짜 선택"),
+                      ),
+                      ElevatedButton.icon(
+                        onPressed: _save,
+                        icon: const Icon(Icons.save),
+                        label: const Text("저장"),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
 
-        const Divider(),
+          const Divider(),
 
-        // 기록 리스트
-        Expanded(
-          child: StreamBuilder<List<ReadingLog>>(
-            stream: _fs.logsByUserStream(user.uid),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (snapshot.hasError) {
-                return Center(child: Text("에러: ${snapshot.error}"));
-              }
-              final logs = snapshot.data ?? [];
-              if (logs.isEmpty) {
-                return const Center(child: Text("기록이 없습니다."));
-              }
-              return ListView.builder(
-                itemCount: logs.length,
-                itemBuilder: (context, i) {
-                  final log = logs[i];
-                  return ListTile(
-                    title: Text(log.bookTitle),
-                    subtitle: Text(
-                      "${log.pagesRead} 페이지 - ${DateFormat('yyyy-MM-dd').format(log.date)}",
-                    ),
-                  );
-                },
-              );
-            },
+          // 기록 리스트
+          Expanded(
+            child: StreamBuilder<List<ReadingLog>>(
+              stream: _fs.logsByUserStream(user.uid),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasError) {
+                  return Center(child: Text("에러 발생: ${snapshot.error}"));
+                }
+
+                final logs = snapshot.data ?? [];
+                if (logs.isEmpty) {
+                  return const Center(child: Text("저장된 기록이 없습니다."));
+                }
+
+                return ListView.builder(
+                  itemCount: logs.length,
+                  itemBuilder: (context, i) {
+                    final log = logs[i];
+                    return Card(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 6, horizontal: 12),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      elevation: 2,
+                      child: ListTile(
+                        leading: const Icon(Icons.book, color: Colors.blue),
+                        title: Text(
+                          log.bookTitle,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          "${log.pagesRead} 페이지\n${DateFormat('yyyy-MM-dd').format(log.date)}",
+                        ),
+                        isThreeLine: true,
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

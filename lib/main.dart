@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "독서 습관 트래커",
+      title: "독서 습관 기르기",
       theme: ThemeData(primarySwatch: Colors.blue),
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),

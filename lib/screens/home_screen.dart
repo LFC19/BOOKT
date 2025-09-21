@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final screens = [
       ChartScreen(userId: widget.user.uid),
-      const RecordListScreen(), // ✅ 여기 수정
+      const RecordListScreen(),
       CalendarScreen(userId: widget.user.uid),
     ];
 
@@ -27,7 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            // 👤 프로필 사진 (작게)
             CircleAvatar(
               radius: 14,
               backgroundImage: widget.user.photoURL != null

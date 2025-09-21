@@ -6,7 +6,7 @@ import 'package:my_app/services/firestore_service.dart';
 
 class AddLogScreen extends StatefulWidget {
   final String userId;
-  final ReadingLog? editing; // 수정 모드인 경우 전달
+  final ReadingLog? editing;
 
   const AddLogScreen({super.key, required this.userId, this.editing});
 

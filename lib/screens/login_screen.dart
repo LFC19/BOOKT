@@ -16,11 +16,10 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // 👋 환영 메시지
               const Icon(Icons.menu_book, size: 80, color: Colors.blueAccent),
               const SizedBox(height: 20),
               const Text(
-                "독서 습관 트래커",
+                "독서 습관 기록지",
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
@@ -31,7 +30,6 @@ class LoginScreen extends StatelessWidget {
               ),
               const SizedBox(height: 40),
 
-              // 🔵 구글 로그인 버튼
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),

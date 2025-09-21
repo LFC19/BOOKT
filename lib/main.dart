@@ -9,7 +9,6 @@ import 'screens/home_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // ✅ 한국어 로케일 데이터 초기화
   await initializeDateFormatting('ko_KR', null);
 
   await Firebase.initializeApp(
@@ -37,7 +36,7 @@ class MyApp extends StatelessWidget {
             );
           }
           if (snapshot.hasData) {
-            return HomeScreen(user: snapshot.data!); // ✅ 로그인 유저 전달
+            return HomeScreen(user: snapshot.data!);
           }
           return LoginScreen();
         },

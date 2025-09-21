@@ -17,7 +17,6 @@ class FirestoreService {
     await _db.collection(collection).doc(id).delete();
   }
 
-  /// 특정 유저의 기간별 로그 스트림
   Stream<List<ReadingLog>> logsByUserStream(String userId,
       {DateTime? start, DateTime? end}) {
     Query query = _db
@@ -30,7 +29,6 @@ class FirestoreService {
           query.where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(DateTime(start.year, start.month, start.day)));
     }
     if (end != null) {
-      // Firestore는 end를 exclusive로 처리하는게 안전 → 다음날 00:00로 보정
       final endNext = DateTime(end.year, end.month, end.day).add(const Duration(days: 1));
       query =
           query.where('date', isLessThan: Timestamp.fromDate(endNext));
@@ -40,7 +38,6 @@ class FirestoreService {
         snap.docs.map((d) => ReadingLog.fromDoc(d)).toList());
   }
 
-  /// 특정 날짜의 로그 불러오기 (단건 리스트)
   Stream<List<ReadingLog>> logsByDate(String userId, DateTime date) {
     final start = DateTime(date.year, date.month, date.day);
     final endNext = start.add(const Duration(days: 1));

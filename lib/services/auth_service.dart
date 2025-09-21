@@ -8,7 +8,6 @@ class AuthService {
   Stream<User?> get userStream => _auth.authStateChanges();
   User? get currentUser => _auth.currentUser;
 
-  /// Google 로그인
   Future<User?> signInWithGoogle() async {
     try {
       final googleUser = await _googleSignIn.signIn();
@@ -28,7 +27,6 @@ class AuthService {
     }
   }
 
-  /// 로그아웃
   Future<void> signOut() async {
     try {
       await _googleSignIn.signOut();

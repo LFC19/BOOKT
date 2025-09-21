@@ -5,7 +5,7 @@ class ReadingLog {
   final String userId;
   final String bookTitle;
   final int pagesRead;
-  final DateTime date; // 일자 단위 사용
+  final DateTime date;
 
   ReadingLog({
     required this.id,

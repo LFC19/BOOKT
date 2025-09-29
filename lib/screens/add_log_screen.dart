@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:my_app/models/reading_log.dart';
 import 'package:my_app/services/firestore_service.dart';
 
-
 class AddLogScreen extends StatefulWidget {
   final String userId;
   final ReadingLog? editing;
@@ -17,6 +16,7 @@ class AddLogScreen extends StatefulWidget {
 class _AddLogScreenState extends State<AddLogScreen> {
   final _titleController = TextEditingController();
   final _pagesController = TextEditingController();
+  final _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   final _fs = FirestoreService();
   final _formKey = GlobalKey<FormState>();
@@ -27,6 +27,7 @@ class _AddLogScreenState extends State<AddLogScreen> {
     if (widget.editing != null) {
       _titleController.text = widget.editing!.bookTitle;
       _pagesController.text = widget.editing!.pagesRead.toString();
+      _noteController.text = widget.editing!.note ?? '';
       _selectedDate = widget.editing!.date;
     }
   }
@@ -35,19 +36,16 @@ class _AddLogScreenState extends State<AddLogScreen> {
   void dispose() {
     _titleController.dispose();
     _pagesController.dispose();
+    _noteController.dispose();
     super.dispose();
   }
 
   Future<void> _save() async {
-    if (!_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('입력값을 확인하세요.')),
-      );
-      return;
-    }
+    if (!_formKey.currentState!.validate()) return;
 
     final title = _titleController.text.trim();
     final pages = int.parse(_pagesController.text.trim());
+    final note = _noteController.text.trim();
 
     final log = ReadingLog(
       id: widget.editing?.id ?? '',
@@ -55,27 +53,16 @@ class _AddLogScreenState extends State<AddLogScreen> {
       bookTitle: title,
       pagesRead: pages,
       date: DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day),
+      note: note,
     );
 
-    try {
-      if (widget.editing == null) {
-        await _fs.addLog(log);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('✅ 저장 완료')),
-        );
-      } else {
-        await _fs.updateLog(log);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('✏️ 수정 완료')),
-        );
-      }
-      if (mounted) Navigator.pop(context); // 저장 성공 후 화면 닫기
-    } catch (e) {
-      print("❌ Firestore 저장 오류: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('저장 실패: $e')),
-      );
+    if (widget.editing == null) {
+      await _fs.addLog(log);
+    } else {
+      await _fs.updateLog(log);
     }
+
+    if (mounted) Navigator.pop(context);
   }
 
   Future<void> _pickDate() async {
@@ -124,6 +111,15 @@ class _AddLogScreenState extends State<AddLogScreen> {
                   if (n == null || n <= 0) return '1 이상의 정수';
                   return null;
                 },
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _noteController,
+                decoration: const InputDecoration(
+                  labelText: '감상평 (선택)',
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: 3,
               ),
               const SizedBox(height: 12),
               InkWell(

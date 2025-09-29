@@ -15,6 +15,8 @@ class RecordListScreen extends StatefulWidget {
 class _RecordListScreenState extends State<RecordListScreen> {
   final _titleController = TextEditingController();
   final _pagesController = TextEditingController();
+  final _noteController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
   final _fs = FirestoreService();
 
@@ -31,6 +33,7 @@ class _RecordListScreenState extends State<RecordListScreen> {
       bookTitle: _titleController.text.trim(),
       pagesRead: int.parse(_pagesController.text.trim()),
       date: _selectedDate,
+      note: _noteController.text.trim(),
     );
 
     await _fs.addLog(log);
@@ -38,6 +41,7 @@ class _RecordListScreenState extends State<RecordListScreen> {
     // 입력창 초기화
     _titleController.clear();
     _pagesController.clear();
+    _noteController.clear();
     setState(() => _selectedDate = DateTime.now());
   }
 
@@ -49,6 +53,14 @@ class _RecordListScreenState extends State<RecordListScreen> {
       lastDate: DateTime(2100),
     );
     if (picked != null) setState(() => _selectedDate = picked);
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _pagesController.dispose();
+    _noteController.dispose();
+    super.dispose();
   }
 
   @override
@@ -93,6 +105,16 @@ class _RecordListScreenState extends State<RecordListScreen> {
                       if (n == null || n <= 0) return "1 이상의 정수 입력";
                       return null;
                     },
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: _noteController,
+                    decoration: const InputDecoration(
+                      labelText: "감상평 (선택)",
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.edit_note),
+                    ),
+                    maxLines: 2,
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -150,13 +172,16 @@ class _RecordListScreenState extends State<RecordListScreen> {
                           borderRadius: BorderRadius.circular(12)),
                       elevation: 2,
                       child: ListTile(
-                        leading: const Icon(Icons.book, color: Colors.blue),
+                        leading:
+                        const Icon(Icons.book, color: Colors.blueAccent),
                         title: Text(
                           log.bookTitle,
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(
-                          "${log.pagesRead} 페이지\n${DateFormat('yyyy-MM-dd').format(log.date)}",
+                          "${log.pagesRead} 페이지\n"
+                              "${DateFormat('yyyy-MM-dd').format(log.date)}"
+                              "${(log.note != null && log.note!.isNotEmpty) ? "\n감상평: ${log.note}" : ""}",
                         ),
                         isThreeLine: true,
                       ),
@@ -171,4 +196,5 @@ class _RecordListScreenState extends State<RecordListScreen> {
     );
   }
 }
+
 

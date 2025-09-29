@@ -6,6 +6,7 @@ class ReadingLog {
   final String bookTitle;
   final int pagesRead;
   final DateTime date;
+  final String? note;
 
   ReadingLog({
     required this.id,
@@ -13,6 +14,7 @@ class ReadingLog {
     required this.bookTitle,
     required this.pagesRead,
     required this.date,
+    this.note,
   });
 
   Map<String, dynamic> toMap() {
@@ -21,6 +23,7 @@ class ReadingLog {
       'bookTitle': bookTitle,
       'pagesRead': pagesRead,
       'date': Timestamp.fromDate(DateTime(date.year, date.month, date.day)),
+      if (note != null && note!.isNotEmpty) 'note': note,
     };
   }
 
@@ -33,6 +36,8 @@ class ReadingLog {
       bookTitle: data['bookTitle'] as String,
       pagesRead: (data['pagesRead'] as num).toInt(),
       date: ts.toDate(),
+      note: data['note'] as String?,
     );
   }
+
 }

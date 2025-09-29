@@ -6,7 +6,7 @@ import 'firebase_options.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await initializeDateFormatting('ko_KR', null);
@@ -18,15 +18,41 @@ void main() async {
   runApp(const MyApp());
 }
 
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "독서 습관 기르기",
-      theme: ThemeData(primarySwatch: Colors.blue),
+      title: "독서 기록지",
+      debugShowCheckedModeBanner: false,
+
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        cardTheme: const CardThemeData(
+          elevation: 3.0,
+          margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.blueAccent,
+          foregroundColor: Colors.white,
+          elevation: 2,
+        ),
+      ),
+
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.teal,
+          brightness: Brightness.dark,
+        ),
+        useMaterial3: true,
+      ),
+
+      themeMode: ThemeMode.system,
+
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
@@ -44,4 +70,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

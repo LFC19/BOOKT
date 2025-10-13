@@ -46,7 +46,7 @@ Firebase Authentication을 통한 로그인 기능과 Firestore 기반 데이터
 
 ## 📸 실행 화면
 
-*(스크린샷 넣을 곳)*
+https://github.com/LFC19/BOOKT/issues/1#issue-3508704150
 
 ---
 

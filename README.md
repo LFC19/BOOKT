@@ -22,9 +22,11 @@ Firebase Authentication을 통한 로그인 기능과 Firestore 기반 데이터
 
 ## 🛠️ 기술 스택
 - **Framework** : Flutter (Dart)
+- **Build Tool** : Gradle (Kotlin 기반)
+- **IDE** : Android Studio
+- **UI/UX** : Material 3, fl_chart, table_calendar, intl
 - **Backend / DB** : Firebase Firestore
 - **Auth** : Firebase Authentication (Google 로그인)
-- **UI/UX** : Material 3, fl_chart, table_calendar, intl
 - **State** : 기본 StatefulWidget + StreamBuilder
 
 ---

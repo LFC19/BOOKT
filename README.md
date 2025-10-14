@@ -45,13 +45,30 @@ Firebase Authentication을 통한 로그인 기능과 Firestore 기반 데이터
 ---
 
 ## 📸 실행 화면
-
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/4dd95fc4-e6e1-4f38-b382-0c3d338261b4" width="180" />
-  <img src="https://github.com/user-attachments/assets/647698bd-01be-42a3-8770-8315396ca87e" width="180" />
-  <img src="https://github.com/user-attachments/assets/9d7ea350-0de6-47d7-996d-eb7c11844b05" width="180" />
-  <img src="https://github.com/user-attachments/assets/890c799c-0333-4cfd-8dd1-64b7db51bea4" width="180" />
-  <img src="https://github.com/user-attachments/assets/2b6dd482-ecd9-4999-adb0-570e5ce46186" width="180" />
+<table>
+  <tr>
+    <th>로그인</th>
+    <th>기록입력</th>
+    <th>기록차트구성</th>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/4dd95fc4-e6e1-4f38-b382-0c3d338261b4" width="180" /></td>
+    <td><img src="https://github.com/user-attachments/assets/647698bd-01be-42a3-8770-8315396ca87e" width="180" />></td>
+    <td><img src="https://github.com/user-attachments/assets/9d7ea350-0de6-47d7-996d-eb7c11844b05" width="180" /><img src="https://github.com/user-attachments/assets/890c799c-0333-4cfd-8dd1-64b7db51bea4" width="180" /></td>
+  </tr>
+</table>
+<table>
+  <tr>
+    <th>캘린더 기록</th>
+    <th>기록 수정</th>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/2b6dd482-ecd9-4999-adb0-570e5ce46186" width="180" /></td>
+    <td><img src="https://github.com/user-attachments/assets/3441edba-f3eb-4b86-a9c7-8fbfc77f25ec" width="180" /></td>
+  
+  </tr>
+</table>
 </div>
 
 ---

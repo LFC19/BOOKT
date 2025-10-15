@@ -55,9 +55,9 @@ Firebase Authentication을 통한 로그인 기능과 Firestore 기반 데이터
     <th>기록차트구성</th>
   </tr>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/4dd95fc4-e6e1-4f38-b382-0c3d338261b4" width="180" /></td>
-    <td><img src="https://github.com/user-attachments/assets/647698bd-01be-42a3-8770-8315396ca87e" width="180" />></td>
-    <td><img src="https://github.com/user-attachments/assets/9d7ea350-0de6-47d7-996d-eb7c11844b05" width="180" /><img src="https://github.com/user-attachments/assets/890c799c-0333-4cfd-8dd1-64b7db51bea4" width="180" /></td>
+    <td><img src="https://github.com/user-attachments/assets/122f269b-597d-4f4d-982c-5c71b3daa8da" width="180" /></td>
+    <td><img src="https://github.com/user-attachments/assets/e92c4689-d8b4-4b0e-a2ee-1c496f661ed6" width="180" />></td>
+    <td><img src="https://github.com/user-attachments/assets/aac2d36c-3eb1-41b9-ba69-ee3a076a4c65" width="180" /><img src="https://github.com/user-attachments/assets/02f7b7f5-706e-4aeb-9f4f-69254f16a9d8" width="180" /></td>
   </tr>
 </table>
 <table>
@@ -66,8 +66,8 @@ Firebase Authentication을 통한 로그인 기능과 Firestore 기반 데이터
     <th>기록 수정</th>
   </tr>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/2b6dd482-ecd9-4999-adb0-570e5ce46186" width="180" /></td>
-    <td><img src="https://github.com/user-attachments/assets/3441edba-f3eb-4b86-a9c7-8fbfc77f25ec" width="180" /></td>
+    <td><img src="https://github.com/user-attachments/assets/b842ef89-d5e0-46c5-9e26-56277410cbab" width="180" /></td>
+    <td><img src="https://github.com/user-attachments/assets/eee0fdf3-e725-449f-a0aa-5e8fd0713df5"" width="180" /></td>
   
   </tr>
 </table>
